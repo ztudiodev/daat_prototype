@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard DAAT</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js" integrity="sha512-Kolh2UJkNnRbl+uKf1nwZbmhICd5jPuuhSXsXmqGfZzPRv7fi8V+fhnjWqMEOd4rbyXZ1WOGcPC1nCzWYmGiVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
+  <body class="min-h-screen bg-slate-950 text-slate-100 font-inter">
+    <div id="toast-container" class="fixed right-5 top-5 z-50 space-y-3"></div>
+    <div class="flex min-h-screen">
+      <%- include('partials/sidebar', { user, title }) %>
+      <div class="flex-1">
+        <%- include('partials/header', { user, title }) %>
+        <main class="p-6 md:p-8">
+          <section class="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
+            <div class="space-y-6">
+              <div class="rounded-[32px] border border-slate-800 bg-slate-900/95 p-6 shadow-glow">
+                <div class="mb-5 flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <p class="text-sm uppercase tracking-[0.25em] text-cyan-400">Resumen de riesgo</p>
+                    <h2 class="mt-2 text-3xl font-semibold text-white">Infografía de amenazas</h2>
+                  </div>
+                  <span class="rounded-full bg-slate-800 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-300">SOC simple</span>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-3">
+                  <article class="rounded-3xl bg-slate-950/80 p-5">
+                    <p class="text-sm text-slate-400">Análisis totales</p>
+                    <p class="mt-3 text-4xl font-semibold text-white"><%= stats.total %></p>
+                  </article>
+                  <article class="rounded-3xl bg-rose-500/10 p-5">
+                    <p class="text-sm text-rose-300/80">Riesgo Alto</p>
+                    <p class="mt-3 text-4xl font-semibold text-rose-300"><%= stats.high %></p>
+                  </article>
+                  <article class="rounded-3xl bg-amber-400/10 p-5">
+                    <p class="text-sm text-amber-200/80">Riesgo Medio</p>
+                    <p class="mt-3 text-4xl font-semibold text-amber-200"><%= stats.medium %></p>
+                  </article>
+                </div>
+              </div>
+              <div class="rounded-[32px] border border-slate-800 bg-slate-900/95 p-6 shadow-glow">
+                <div class="mb-6 flex items-center justify-between">
+                  <div>
+                    <p class="text-sm uppercase tracking-[0.28em] text-slate-400">Panel de amenazas</p>
+                    <h3 class="mt-2 text-2xl font-semibold text-white">Estado actual del correo</h3>
+                  </div>
+                  <span class="inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-sm text-slate-300">
+                    <i data-feather="shield" class="h-4 w-4"></i> Monitor 24/7
+                  </span>
+                </div>
+                <div class="grid gap-4 md:grid-cols-2">
+                  <div class="rounded-3xl bg-slate-950/80 p-5">
+                    <p class="text-sm text-slate-400">Red de seguridad</p>
+                    <p class="mt-3 text-3xl font-semibold text-white"><%= stats.low %></p>
+                    <p class="mt-2 text-sm text-slate-500">Correos con riesgo bajo.</p>
+                  </div>
+                  <div class="rounded-3xl bg-slate-950/80 p-5">
+                    <p class="text-sm text-slate-400">Último registro</p>
+                    <p class="mt-3 text-3xl font-semibold text-white"><%= latestAnalyses.length %></p>
+                    <p class="mt-2 text-sm text-slate-500">Análisis recientes cargados.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-[32px] border border-slate-800 bg-slate-900/95 p-6 shadow-glow">
+                <div class="mb-5 flex items-center justify-between">
+                  <div>
+                    <p class="text-sm text-slate-400 uppercase tracking-[0.3em]">Historial rápido</p>
+                    <h3 class="mt-2 text-2xl font-semibold text-white">Análisis recientes</h3>
+                  </div>
+                  <a href="/analysis/history" class="text-cyan-400 hover:text-cyan-300">Ver todo</a>
+                </div>
+                <div class="space-y-3">
+                  <% if (latestAnalyses.length === 0) { %>
+                    <p class="text-sm text-slate-400">Aún no hay análisis registrados.</p>
+                  <% } %>
+                  <% latestAnalyses.forEach((item) => { %>
+                    <div class="rounded-3xl border border-slate-800 bg-slate-950/70 p-4 transition hover:border-cyan-400">
+                      <div class="flex items-center justify-between gap-3">
+                        <div>
+                          <p class="text-sm text-slate-400">Asunto</p>
+                          <p class="font-semibold text-white"><%= item.subject %></p>
+                        </div>
+                        <span class="rounded-full px-3 py-1 text-xs font-semibold <%= item.riskLevel === 'ALTO' ? 'bg-rose-500/15 text-rose-300' : item.riskLevel === 'MEDIO' ? 'bg-amber-400/15 text-amber-300' : 'bg-emerald-500/15 text-emerald-300' %>"><%= item.riskLevel %></span>
+                      </div>
+                      <div class="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+                        <span><strong>Confianza:</strong> <%= item.confidence %>%</span>
+                        <span>Creado: <%= new Date(item.createdAt).toLocaleString('es-ES') %></span>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-6">
+              <div class="rounded-[32px] border border-slate-800 bg-slate-900/95 p-6 shadow-glow">
+                <p class="text-sm uppercase tracking-[0.3em] text-cyan-400">Analizar correo</p>
+                <h3 class="mt-2 text-2xl font-semibold text-white">Ejecuta un análisis manual</h3>
+                <p class="mt-3 text-sm text-slate-400">Introduce remitente, asunto y contenido del correo para obtener un informe de riesgo instantáneo.</p>
+                <form id="quickAnalysisForm" action="/analysis/analyze" method="post" class="mt-6 space-y-4">
+                  <div>
+                    <label class="block text-sm text-slate-300">Remitente</label>
+                    <input type="text" name="sender" required class="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400" placeholder="ejemplo@correo.com" />
+                  </div>
+                  <div>
+                    <label class="block text-sm text-slate-300">Asunto</label>
+                    <input type="text" name="subject" required class="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400" placeholder="Actualiza tu cuenta" />
+                  </div>
+                  <div>
+                    <label class="block text-sm text-slate-300">Contenido</label>
+                    <textarea name="content" required rows="5" class="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400" placeholder="Hola, haz clic en este enlace..." ></textarea>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-slate-300">URLs opcionales</label>
+                    <input type="text" name="urls" class="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-cyan-400" placeholder="https://phishing.example.com" />
+                  </div>
+                  <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-3xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400" id="quickAnalyzeButton">
+                    <span>Analizar correo</span>
+                    <i data-feather="paper-airplane" class="h-4 w-4"></i>
+                  </button>
+                </form>
+                <div id="analysisCard" class="hidden mt-6 rounded-[32px] border border-slate-800 bg-slate-950/90 p-5">
+                  <div class="mb-5 flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Resultado IA</p>
+                      <h3 class="mt-2 text-2xl font-semibold text-white">Reporte de detección</h3>
+                    </div>
+                    <span id="riskBadge" class="rounded-full px-4 py-2 text-sm font-semibold"></span>
+                  </div>
+                  <div class="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <p class="text-sm text-slate-400">Confianza</p>
+                      <div class="mt-3 h-4 overflow-hidden rounded-full bg-slate-800">
+                        <div id="confidenceBar" class="h-full rounded-full bg-cyan-400" style="width:0%"></div>
+                      </div>
+                      <p id="confidenceLabel" class="mt-2 text-sm text-slate-300"></p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-slate-400">Indicadores detectados</p>
+                      <div id="threatTags" class="mt-3 flex flex-wrap gap-2"></div>
+                    </div>
+                  </div>
+                  <div class="mt-6 space-y-4">
+                    <div>
+                      <p class="text-sm text-slate-400">Explicación</p>
+                      <p id="explanationText" class="mt-2 rounded-3xl bg-slate-900/80 p-4 text-slate-200"></p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-slate-400">Recomendación</p>
+                      <p id="recommendationText" class="mt-2 rounded-3xl bg-slate-900/80 p-4 text-slate-200"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-[32px] border border-slate-800 bg-slate-900/95 p-6 shadow-glow">
+                <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Indicadores de seguridad</p>
+                <div class="mt-5 grid gap-4">
+                  <div class="rounded-3xl bg-slate-950/70 p-5">
+                    <p class="text-sm text-slate-400">Riesgo crítico detectado</p>
+                    <p class="mt-3 text-xl font-semibold text-rose-300">Revisa enlaces y remitentes sospechosos.</p>
+                  </div>
+                  <div class="rounded-3xl bg-slate-950/70 p-5">
+                    <p class="text-sm text-slate-400">Consejo rápido</p>
+                    <p class="mt-3 text-xl font-semibold text-cyan-300">Verifica cabeceras y evita abrir archivos adjuntos desconocidos.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+    <script>feather.replace();</script>
+    <script src="/js/app.js"></script>
+    <script src="/js/analysis.js"></script>
+  </body>
+</html>

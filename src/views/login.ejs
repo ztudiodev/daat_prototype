@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | DAAT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="min-h-screen bg-slate-950 text-white flex items-center justify-center px-4 font-inter">
+    <div class="max-w-xl w-full rounded-[32px] border border-slate-800 bg-slate-900/95 p-10 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
+      <div class="mb-8 text-center">
+        <p class="text-xs uppercase tracking-[0.3em] text-cyan-400">DAAT - Correo Malicioso</p>
+        <h1 class="mt-4 text-4xl font-semibold text-white">Ingreso Seguro</h1>
+        <p class="mt-2 text-slate-400">Accede al dashboard de análisis de amenazas con Gemini.</p>
+      </div>
+      <% if (error) { %>
+        <div class="mb-6 rounded-3xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+          <strong>Error:</strong> <%= error %>
+        </div>
+      <% } %>
+      <form action="/login" method="post" class="space-y-5">
+        <label class="block">
+          <span class="text-sm text-slate-300">Email</span>
+          <input type="email" name="email" required placeholder="admin@daat.com" class="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400" />
+        </label>
+        <label class="block">
+          <span class="text-sm text-slate-300">Contraseña</span>
+          <input type="password" name="password" required placeholder="Password123*" class="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400" />
+        </label>
+        <button type="submit" class="w-full rounded-3xl bg-cyan-500 px-5 py-3 text-base font-semibold text-slate-950 transition hover:bg-cyan-400">Ingresar</button>
+      </form>
+      <div class="mt-8 rounded-3xl border border-slate-800 bg-slate-950/90 p-5 text-sm text-slate-400">
+        <p><strong>Usuario demo:</strong> admin@daat.com</p>
+        <p><strong>Contraseña:</strong> Password123*</p>
+      </div>
+    </div>
+  </body>
+</html>

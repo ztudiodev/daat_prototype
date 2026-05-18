@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historial | DAAT</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js" integrity="sha512-Kolh2UJkNnRbl+uKf1nwZbmhICd5jPuuhSXsXmqGfZzPRv7fi8V+fhnjWqMEOd4rbyXZ1WOGcPC1nCzWYmGiVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
+  <body class="min-h-screen bg-slate-950 text-slate-100 font-inter">
+    <div id="toast-container" class="fixed right-5 top-5 z-50 space-y-3"></div>
+    <div class="flex min-h-screen">
+      <%- include('partials/sidebar', { user, title }) %>
+      <div class="flex-1">
+        <%- include('partials/header', { user, title }) %>
+        <main class="p-6 md:p-8">
+          <div class="space-y-6 rounded-[32px] border border-slate-800 bg-slate-900/95 p-6 shadow-glow">
+            <div class="mb-5 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p class="text-sm uppercase tracking-[0.3em] text-cyan-400">Historial de análisis</p>
+                <h2 class="mt-2 text-3xl font-semibold text-white">Registros recientes</h2>
+              </div>
+              <span class="rounded-full bg-slate-800 px-4 py-2 text-sm text-slate-300">Total: <%= history.length %></span>
+            </div>
+            <div class="overflow-hidden rounded-[32px] border border-slate-800 bg-slate-950/90">
+              <table class="min-w-full divide-y divide-slate-800 text-sm text-slate-300">
+                <thead class="bg-slate-900 text-left text-xs uppercase tracking-[0.24em] text-slate-500">
+                  <tr>
+                    <th class="px-6 py-4">Remitente</th>
+                    <th class="px-6 py-4">Asunto</th>
+                    <th class="px-6 py-4">Riesgo</th>
+                    <th class="px-6 py-4">Confianza</th>
+                    <th class="px-6 py-4">Creado</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800">
+                  <% if (history.length === 0) { %>
+                    <tr>
+                      <td colspan="5" class="px-6 py-8 text-center text-slate-400">No hay análisis registrados todavía.</td>
+                    </tr>
+                  <% } %>
+                  <% history.forEach((analysis) => { %>
+                    <tr class="hover:bg-slate-900/80">
+                      <td class="px-6 py-4"><%= analysis.sender %></td>
+                      <td class="px-6 py-4"><%= analysis.subject %></td>
+                      <td class="px-6 py-4">
+                        <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold <%= analysis.riskLevel === 'ALTO' ? 'bg-rose-500/15 text-rose-300' : analysis.riskLevel === 'MEDIO' ? 'bg-amber-400/15 text-amber-300' : 'bg-emerald-500/15 text-emerald-300' %>"><%= analysis.riskLevel %></span>
+                      </td>
+                      <td class="px-6 py-4"><%= analysis.confidence %>%</td>
+                      <td class="px-6 py-4"><%= new Date(analysis.createdAt).toLocaleString('es-ES') %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>feather.replace();</script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>
