@@ -41,7 +41,7 @@ app.use((req, res) => {
 		await sequelize.authenticate();
 		await sequelize.sync();
 		app.listen(PORT, () => {
-			console.log(`DAAT server running on http://localhost:${PORT}`);
+			console.log(`Servidor DAAT corriendo en puerto ${PORT}`);
 		});
 	} catch (error) {
 		console.error("No se pudo iniciar la aplicación:", error);
