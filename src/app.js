@@ -37,11 +37,18 @@ app.use((req, res) => {
 	try {
 		await sequelize.authenticate();
 		await sequelize.sync();
-		app.listen(PORT, () => {
-			console.log(`Servidor DAAT corriendo en puerto ${PORT}`);
-		});
+		if (!process.env.VERCEL) {
+			app.listen(PORT, () => {
+				console.log(`Servidor DAAT corriendo en puerto ${PORT}`);
+			});
+		}
 	} catch (error) {
 		console.error("No se pudo iniciar la aplicación:", error);
-		process.exit(1);
+		if (!process.env.VERCEL) {
+			process.exit(1);
+		}
 	}
 })();
+
+module.exports = app;
+

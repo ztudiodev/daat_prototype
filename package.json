@@ -7,6 +7,7 @@
 		"dev": "npm run build:css && nodemon src/app.js",
 		"start": "node src/app.js",
 		"build:css": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css --minify",
+		"build": "npm run build:css",
 		"seed": "node src/utils/seed.js"
 	},
 	"dependencies": {
